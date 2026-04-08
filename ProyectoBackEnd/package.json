@@ -16,10 +16,12 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.3.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mssql": "^12.2.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/mssql": "^9.1.11",
     "@types/node": "^25.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2"
