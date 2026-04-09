@@ -27,9 +27,3 @@ async function startApp() {
 startApp();
 // rutas
 app.use('/api', usuariosRouter);
-
-
-
-
-
-
