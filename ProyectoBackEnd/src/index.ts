@@ -2,6 +2,8 @@ import express,{ Express } from "express";
 import cors from "cors";
 import { poolPromise } from "./config/baseDeDatos";
 import usuariosRouter from './routers/usuarios.router';
+import publicacionRouter from './routers/publicacion.router'
+import vehiculoRouter from "./routers/vehiculo.router";
 
 const app: Express = express();
 
@@ -27,3 +29,5 @@ async function startApp() {
 startApp();
 // rutas
 app.use('/autoDrive', usuariosRouter);
+app.use('/autoDrive', publicacionRouter);
+app.use('/autoDrive', vehiculoRouter);

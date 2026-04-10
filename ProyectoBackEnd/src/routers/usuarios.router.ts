@@ -3,7 +3,7 @@ import { inicioSesion, registrarUSuario } from '../controllers/usuarios.controll
 
 const router = Router();
 
-router.post('/registro', registrarUSuario);
-router.post('/inicioSesion', inicioSesion);
+router.post('/usuario/registro', registrarUSuario);
+router.post('/usuario/inicioSesion', inicioSesion);
 
 export default router

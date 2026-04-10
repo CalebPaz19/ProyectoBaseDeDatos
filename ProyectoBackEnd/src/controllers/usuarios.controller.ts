@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { buscarUsuario, crearUsuario } from '../models/usuario.model';
+import bcrypt from "bcryptjs";
 
 export const registrarUSuario = async (req: Request, res: Response) => {
   try {
@@ -20,9 +21,12 @@ export const registrarUSuario = async (req: Request, res: Response) => {
         message: 'Faltan campos obligatorios'
       })
     };
+    
+    // Normaliza email para que coincida con cómo se guarda (lowercase+trim)
+    const correoNormalizado = String(correo).toLowerCase().trim();
 
-     // Normaliza email para que coincida con cómo se guarda (lowercase+trim)
-      const correoNormalizado = String(correo).toLowerCase().trim();
+    //Encriptacion de contraseña
+    const contraseñaHash = await bcrypt.hash(contraseña, 10);
 
 
     const nuevoUsuario = await crearUsuario({
@@ -32,7 +36,7 @@ export const registrarUSuario = async (req: Request, res: Response) => {
       apellido1,
       apellido2,
       correo: correoNormalizado,
-      contraseña,
+      contraseña: contraseñaHash ,
       telefono
     });
 
@@ -70,7 +74,7 @@ export const inicioSesion = async (req: Request, res: Response ) => {
 
     // Normaliza email para que coincida con cómo se guarda (lowercase+trim)
     correo = String(correo).toLowerCase().trim();
-    
+
     const usuario = await buscarUsuario(correo);
 
     if (!usuario){
@@ -80,10 +84,9 @@ export const inicioSesion = async (req: Request, res: Response ) => {
     }
 
     //Verificar contraseña
-    if (usuario.contrasena != contraseña){
-      return res.status(401).json({
-        message: "Contraseña Incorrecta"
-      });
+    const ok = await bcrypt.compare(contraseña, usuario.contrasena);
+    if (!ok) {
+      return res.status(401).json({ ok: false, message: "Contraseña incorrecta" });
     }
 
     //Verificar estado de la cuanta
