@@ -2,7 +2,7 @@ import { poolPromise } from "../config/baseDeDatos";
 import { Usuario } from "../Interfaces/usuario.interface";
 
 export const crearUsuario = async (usuario: Usuario) => {
-  const conexion = await poolPromise
+  const conexion = await poolPromise;
 
   const result = await conexion.request()
     .input('dni', usuario.dni)
@@ -32,3 +32,24 @@ export const crearUsuario = async (usuario: Usuario) => {
 
   return result.recordset[0]
 }
+
+export const buscarUsuario = async (correo: string) =>{
+  const conexion = await poolPromise
+
+  const result = await conexion.request()
+  .input('correo', correo)
+  .query(`
+    SELECT
+      id_usuario,
+      primer_nombre AS nombre1,
+      primer_apellido AS apellido1,
+      correo,
+      contrasena,
+      rol,
+      estado_cuenta
+    FROM Usuario
+    WHERE @correo = correo
+    `);
+
+  return result.recordset[0] || null;
+};
