@@ -12,8 +12,6 @@ const config: sql.config = {
   }
 };
 
-// export const pool = new sql.ConnectionPool(config);
-// export const poolConnect = pool.connect();
 
 export const poolPromise = new sql.ConnectionPool(config)
   .connect()

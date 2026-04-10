@@ -1,5 +1,8 @@
-import { Router } from "express";
+import { Router } from 'express'
+import { registrarUSuario } from '../controllers/usuarios.controller'
 
-const router = Router();
+const router = Router()
 
-export default router;
+router.post('/registro', registrarUSuario)
+
+export default router
