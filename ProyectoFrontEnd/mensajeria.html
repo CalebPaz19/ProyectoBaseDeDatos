@@ -1,0 +1,90 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensajeria Layout · Clean Bootstrap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #f0f2f5;
+    }
+    .inbox-column {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      min-height: 70vh;
+      border: 1px solid #e9ecef;
+    }
+    .center-column {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      min-height: 70vh;
+      border: 1px solid #e9ecef;
+    }
+    .lower-panel {
+      background: white;
+      border-radius: 2rem;
+      padding: 0.6rem 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      border: 1px solid #e9ecef;
+      display: inline-block;
+      width: auto;
+      margin: 0 auto;
+    }
+    .navbar {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+    /* optional subtle hover effect on columns (just for aesthetics) */
+    .inbox-column, .center-column {
+      transition: box-shadow 0.2s;
+    }
+    .inbox-column:hover, .center-column:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-semibold" href="#">📬 Inbox</a>
+  </div>
+</nav>
+
+<div class="container px-4">
+  <!-- Main row: left inbox column + center blank column -->
+  <div class="row g-4">
+    <!-- LEFT COLUMN – dedicated to inbox (visibly separate, empty) -->
+    <div class="col-md-5 col-lg-4">
+      <div class="inbox-column p-0">
+        <!-- absolutely empty – no text, no icons, no messages -->
+      </div>
+    </div>
+
+    <!-- CENTER COLUMN – completely blank -->
+    <div class="col-md-7 col-lg-8">
+      <div class="center-column p-0">
+        <!-- nothing here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Small lower panel (centered) -->
+  <div class="row mt-4">
+    <div class="col-12 text-center">
+      <div class="lower-panel">
+        <button class="btn btn-sm btn-outline-secondary me-2">✏️ Compose</button>
+        <button class="btn btn-sm btn-outline-secondary">🗑 Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
