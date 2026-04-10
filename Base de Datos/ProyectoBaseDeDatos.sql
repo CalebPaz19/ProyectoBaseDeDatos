@@ -3,17 +3,17 @@ use AutoDrive
 
 CREATE TABLE Usuario (
     id_usuario INT IDENTITY PRIMARY KEY,
-    dni INT UNIQUE NOT NULL,
+    dni VARCHAR(20) UNIQUE NOT NULL,
     primer_nombre VARCHAR(25) NOT NULL, 
     segundo_nombre VARCHAR(25),
     primer_apellido VARCHAR(25) NOT NULL,
-    segundo_apellifo VARCHAR(25),
+    segundo_apellido VARCHAR(25),
     
     correo VARCHAR(100) NOT NULL UNIQUE,
-    contraseña VARCHAR(100) NOT NULL,
+    contrasena VARCHAR(100) NOT NULL,
     telefono VARCHAR(25) NOT NULL,
     
-    foto_perfil VARCHAR(100) NOT NULL,
+    foto_perfil VARCHAR(100),
 
     rol VARCHAR(20) NOT NULL DEFAULT 'usuario',
     estado_cuenta VARCHAR(25) NOT NULL DEFAULT 'activa',
