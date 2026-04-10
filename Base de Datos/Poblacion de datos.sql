@@ -43,6 +43,21 @@ VALUES
 ('Chevrolet'),
 ('Nissan');
 
+-- MODELO
+INSERT INTO Modelo (id_marca, nombre) 
+VALUES 
+(1, 'Corolla'),  -- Toyota
+(1, 'Hilux'),    -- Toyota
+(1, 'RAV4'),     -- Toyota
+(2, 'Civic'),    -- Honda
+(2, 'CR-V'),     -- Honda
+(3, 'F-150'),    -- Ford
+(3, 'Explorer'), -- Ford
+(4, 'Silverado'),-- Chevrolet
+(4, 'Aveo'),     -- Chevrolet
+(5, 'Sentra'),   -- Nissan
+(5, 'Frontier'); -- Nissan
+
 -- UBICACION
 -- Primero poblar CONTINENTE
 INSERT INTO Continente(nombre) 
