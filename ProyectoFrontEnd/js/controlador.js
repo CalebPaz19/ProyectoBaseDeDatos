@@ -6,6 +6,153 @@ const vehiculos = [
     { id: 103, userId: 1, precio: 32000, marca: "Ford", modelo: "Raptor", desc: "Potencia y comodidad para todo terreno.", fecha: "2026-04-05" }
 ];
 
+// ============================================
+// CAR DETAILS MODAL - Gallery and Populate
+// ============================================
+
+// Car images database for gallery
+const carImages = {
+    'Porsche 911 Turbo': [
+        'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80'
+    ],
+    'BMW Serie 3': [
+        'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1607853554439-00ce8a4f7d0a?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1553949345-eb786bb3f7ba?auto=format&fit=crop&w=800&q=80'
+    ],
+    'Ford Raptor SUV': [
+        'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1544829099-b9e6b8c5a6a6?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80'
+    ]
+};
+
+let currentImageIndex = 0;
+let currentImages = [];
+
+// DOM elements for gallery
+const prevBtn = document.getElementById('gallery-prev');
+const nextBtn = document.getElementById('gallery-next');
+const detalleImg = document.getElementById('detalle-img');
+const imageCounter = document.getElementById('image-counter');
+const detalleModal = document.getElementById('detalleModal');
+const enviarMensajeBtn = document.getElementById('enviar-mensaje-btn');
+const cerrarSesionBtn = document.getElementById('btn-cerrar-sesion');
+
+// Update gallery image
+function updateGalleryImage() {
+    if (currentImages.length > 0) {
+        detalleImg.src = currentImages[currentImageIndex];
+        if (imageCounter) {
+            imageCounter.textContent = `Imagen ${currentImageIndex + 1} / ${currentImages.length}`;
+        }
+    }
+    if (prevBtn) {
+        prevBtn.style.display = currentImages.length > 1 ? 'block' : 'none';
+    }
+    if (nextBtn) {
+        nextBtn.style.display = currentImages.length > 1 ? 'block' : 'none';
+    }
+}
+
+// Previous image
+if (prevBtn) {
+    prevBtn.addEventListener('click', function() {
+        if (currentImages.length > 0) {
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            updateGalleryImage();
+        }
+    });
+}
+
+// Next image
+if (nextBtn) {
+    nextBtn.addEventListener('click', function() {
+        if (currentImages.length > 0) {
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            updateGalleryImage();
+        }
+    });
+}
+
+// Populate detail modal when opened
+if (detalleModal) {
+    detalleModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        
+        const title = button.getAttribute('data-car-title');
+        const price = button.getAttribute('data-car-price');
+        const year = button.getAttribute('data-car-year');
+        const km = button.getAttribute('data-car-km');
+        const transmission = button.getAttribute('data-car-transmission');
+        const fuel = button.getAttribute('data-car-fuel');
+        const hp = button.getAttribute('data-car-hp');
+
+        document.getElementById('detalle-titulo').textContent = title;
+        document.getElementById('detalle-precio').textContent = price;
+        document.getElementById('detalle-anio').textContent = year;
+        document.getElementById('detalle-km').textContent = km;
+        document.getElementById('detalle-transmision').textContent = transmission;
+        document.getElementById('detalle-combustible').textContent = fuel;
+        document.getElementById('detalle-potencia').textContent = hp;
+
+        // Set up gallery
+        currentImages = carImages[title] || [button.getAttribute('data-car-img')];
+        currentImageIndex = 0;
+        updateGalleryImage();
+
+        // Update contact modal with car name
+        const contactarAutoNombre = document.getElementById('contactar-auto-nombre');
+        if (contactarAutoNombre) {
+            contactarAutoNombre.textContent = title;
+        }
+    });
+}
+
+// Send message button in contact modal
+if (enviarMensajeBtn) {
+    enviarMensajeBtn.addEventListener('click', function() {
+        const telefono = document.getElementById('contactar-telefono').value;
+        const mensaje = document.getElementById('contactar-mensaje').value;
+        const autoNombre = document.getElementById('contactar-auto-nombre').textContent;
+
+        if (!telefono) {
+            alert('Por favor ingresa tu número de teléfono.');
+            return;
+        }
+
+        alert(`✅ Mensaje enviado a vendedor de ${autoNombre}\n\nTeléfono: ${telefono}\n\nMensaje:\n${mensaje}\n\nUn vendedor te contactará pronto.`);
+
+        const contactarModal = bootstrap.Modal.getInstance(document.getElementById('contactarModal'));
+        if (contactarModal) contactarModal.hide();
+    });
+}
+
+// Cerrar Sesión button
+if (cerrarSesionBtn) {
+    cerrarSesionBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        location.reload();
+    });
+}
+
+// User icon size (inline style moved here)
+const userIcon = document.getElementById('user-icon');
+if (userIcon) {
+    userIcon.style.fontSize = '3rem';
+}
+
+// Optional: Add cursor pointer to nav-links that need it
+const navLinksWithOnclick = document.querySelectorAll('.nav-link[onclick]');
+navLinksWithOnclick.forEach(link => {
+    link.style.cursor = 'pointer';
+});
+
+// ============================================
+// CATALOG & USER FUNCTIONS
+// ============================================
 
 // 2. Función para renderizar los vehículos
 function renderizarCatalogo() {
@@ -171,88 +318,103 @@ function renderizarSeccionMisAutos() {
     }
 }
 
+// ============================================
+// DOM CONTENT LOADED EVENT HANDLERS
+// ============================================
+
 document.addEventListener('DOMContentLoaded', () => {
     const formRegistro = document.getElementById('formRegistro');
 
-    formRegistro.addEventListener('submit', (e) => {
-        e.preventDefault(); // Evita que la página se recargue
+    if (formRegistro) {
+        formRegistro.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evita que la página se recargue
 
-        const datos = new FormData(formRegistro);
+            const datos = new FormData(formRegistro);
 
-        // AQUÍ GUARDAMOS EN LA VARIABLE GLOBAL
-        usuarioRegistrado = {
-            id: Date.now(), // Generamos un ID único basado en el tiempo
-            nombre: datos.get('nombre'),
-            apellido: datos.get('apellido'),
-            correo: datos.get('correo'),
-            telefono: datos.get('telefono'),
-            password: datos.get('password')
-        };
+            // AQUÍ GUARDAMOS EN LA VARIABLE GLOBAL
+            usuarioRegistrado = {
+                id: Date.now(), // Generamos un ID único basado en el tiempo
+                nombre: datos.get('nombre'),
+                apellido: datos.get('apellido'),
+                correo: datos.get('correo'),
+                telefono: datos.get('telefono'),
+                password: datos.get('password')
+            };
 
-        console.log("¡Usuario guardado en variable global!", usuarioRegistrado);
+            console.log("¡Usuario guardado en variable global!", usuarioRegistrado);
 
-        // Feedback visual
-        alert(`Registro exitoso. Bienvenido ${usuarioRegistrado.nombre}`);
+            // Feedback visual
+            alert(`Registro exitoso. Bienvenido ${usuarioRegistrado.nombre}`);
 
-        // Cerramos el modal (Código de Bootstrap)
-        const modalElement = document.getElementById('registroModal');
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        modalInstance.hide();
-        
-        // Limpiamos el formulario para la próxima vez
-        formRegistro.reset();
+            // Cerramos el modal (Código de Bootstrap)
+            const modalElement = document.getElementById('registroModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+            
+            // Limpiamos el formulario para la próxima vez
+            formRegistro.reset();
+        });
+    }
 
-        // OPCIONAL: Aquí podrías llamar a la función que muestra el Sidebar
-        // mostrarInterfazPrivada(); 
-    });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.getElementById('formLogin');
 
-    formLogin.addEventListener('submit', (e) => {
-        e.preventDefault();
+    if (formLogin) {
+        formLogin.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        const datos = new FormData(formLogin);
-        const correoIngresado = datos.get('correoLogin');
-        const passIngresada = datos.get('passLogin');
+            const datos = new FormData(formLogin);
+            const correoIngresado = datos.get('correoLogin');
+            const passIngresada = datos.get('passLogin');
 
-        // 1. Verificamos si existe un usuario registrado en la variable global
-        if (!usuarioRegistrado) {
-            alert("No hay ningún usuario registrado en el sistema.");
-            return;
-        }
+            // 1. Verificamos si existe un usuario registrado en la variable global
+            if (!usuarioRegistrado) {
+                alert("No hay ningún usuario registrado en el sistema.");
+                return;
+            }
 
-        // 2. Comparamos los datos
-        if (correoIngresado === usuarioRegistrado.correo && passIngresada === usuarioRegistrado.password) {
-    
-            // 1. Cerramos el modal
-            const modalLogin = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-            modalLogin.hide();
+            // 2. Comparamos los datos
+            if (correoIngresado === usuarioRegistrado.correo && passIngresada === usuarioRegistrado.password) {
+        
+                // 1. Cerramos el modal
+                const modalLogin = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                modalLogin.hide();
 
-            // 2. Actualizamos la interfaz
-            actualizarNavbar();
+                // 2. Actualizamos la interfaz
+                actualizarNavbar();
+                
+                alert(`¡Bienvenido de nuevo, ${usuarioRegistrado.nombre}!`);
+            } else {
+                alert("Correo o contraseña incorrectos. Inténtalo de nuevo.");
+            }
+        });
+    }
+
+    // Escuchar el click en el menú "Catálogo"
+    const linkCatalogo = document.getElementById('link-catalogo');
+    if (linkCatalogo) {
+        linkCatalogo.addEventListener('click', function(e) {
+            e.preventDefault(); // Evita que la página recargue o salte
+            renderizarCatalogo();
+        });
+    }
+
+    // Escuchamos el clic en el botón de "Inicio" o el Logo
+    const navbarBrand = document.querySelector('.navbar-brand');
+    if (navbarBrand) {
+        navbarBrand.addEventListener('click', () => {
+            // Mostramos el Hero quitando la clase 'd-none'
+            const hero = document.getElementById('hero-principal');
+            if (hero) {
+                hero.classList.remove('d-none');
+            }
             
-            alert(`¡Bienvenido de nuevo, ${usuarioRegistrado.nombre}!`);
-        } else {
-            alert("Correo o contraseña incorrectos. Inténtalo de nuevo.");
-        }
-    });
-});
-
-// 3. Escuchar el click en el menú "Catálogo"
-document.getElementById('link-catalogo').addEventListener('click', function(e) {
-    e.preventDefault(); // Evita que la página recargue o salte
-    renderizarCatalogo();
-});
-
-// Escuchamos el clic en el botón de "Inicio" o el Logo
-document.querySelector('.navbar-brand').addEventListener('click', () => {
-    // Mostramos el Hero quitando la clase 'd-none'
-    document.getElementById('hero-principal').classList.remove('d-none');
-    
-    // Opcional: Limpiar el catálogo para que no se vea abajo
-    document.getElementById('contenedor-vehiculos').innerHTML = "";
+            // Opcional: Limpiar el catálogo para que no se vea abajo
+            const contenedorVehiculos = document.getElementById('contenedor-vehiculos');
+            if (contenedorVehiculos) {
+                contenedorVehiculos.innerHTML = "";
+            }
+        });
+    }
 });
 
 // Función extra para probar los clicks en las tarjetas
