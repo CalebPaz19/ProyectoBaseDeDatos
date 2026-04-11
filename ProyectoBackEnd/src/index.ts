@@ -4,6 +4,8 @@ import { poolPromise } from "./config/baseDeDatos";
 import usuariosRouter from './routers/usuarios.router';
 import publicacionRouter from './routers/publicacion.router'
 import vehiculoRouter from "./routers/vehiculo.router";
+import catalogosRouter from "./routers/catalogos.router";
+import ubicacionRouter from "./routers/ubicacion.router";
 
 const app: Express = express();
 
@@ -31,3 +33,5 @@ startApp();
 app.use('/autoDrive', usuariosRouter);
 app.use('/autoDrive', publicacionRouter);
 app.use('/autoDrive', vehiculoRouter);
+app.use('/autoDrive', catalogosRouter);
+app.use('/autoDrive', ubicacionRouter);
