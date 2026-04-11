@@ -68,7 +68,7 @@ CREATE TABLE Vehiculo (
     id_carroceria INT NOT NULL,
     id_condicion_vehiculo INT NOT NULL,
 
-    anio INT NOT NULL CHECK (año >= 1800),
+    anio INT NOT NULL CHECK (anio >= 1800),
     kilometraje INT CHECK (kilometraje >= 0) NOT NULL,
     color VARCHAR(50) NOT NULL,
     num_puertas INT CHECK (num_puertas BETWEEN 2 AND 6),
@@ -122,7 +122,7 @@ CREATE TABLE Publicacion (
     id_vehiculo INT NOT NULL,
     id_ubicacion INT NOT NULL,
 
-    titulo VARCHAR(150) NOT NULL;
+    titulo VARCHAR(150) NOT NULL,
     precio DECIMAL(10,2) NOT NULL CHECK (precio > 0),
     descripcion TEXT,
 

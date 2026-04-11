@@ -6,6 +6,8 @@ import publicacionRouter from './routers/publicacion.router'
 import vehiculoRouter from "./routers/vehiculo.router";
 import catalogosRouter from "./routers/catalogos.router";
 import ubicacionRouter from "./routers/ubicacion.router";
+import path from "path";
+import imagenRouter from "./routers/imagen.router";
 
 const app: Express = express();
 
@@ -35,3 +37,6 @@ app.use('/autoDrive', publicacionRouter);
 app.use('/autoDrive', vehiculoRouter);
 app.use('/autoDrive', catalogosRouter);
 app.use('/autoDrive', ubicacionRouter);
+app.use('/autoDrive', imagenRouter);
+// app.use('/autoDrive', imagenRouter);
+app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
