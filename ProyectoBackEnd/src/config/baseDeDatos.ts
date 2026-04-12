@@ -1,11 +1,11 @@
 import sql, { Request, Transaction } from "mssql"
 
 const config: sql.config = {
-  user: 'sa',
-  password: 'CalebSQL123!',
-  server: 'localhost',
-  database: 'AutoDrive',
-  port: 1433,
+  user: process.env.MSSQL_USER || 'sa',
+  password: process.env.MSSQL_PASSWORD || '',
+  server: process.env.MSSQL_HOST || 'localhost',
+  database: process.env.MSSQL_DATABASE || 'AutoDrive',
+  port: parseInt(process.env.MSSQL_PORT || '1433', 10),
   options: {
     encrypt: false,
     trustServerCertificate: true
