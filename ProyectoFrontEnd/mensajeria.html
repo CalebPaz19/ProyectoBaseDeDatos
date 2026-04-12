@@ -1,90 +1,97 @@
-html
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mensajeria Layout · Clean Bootstrap</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>AutoDrive | Mensajería</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
   <style>
-    body {
-      background: #f0f2f5;
-    }
-    .inbox-column {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      min-height: 70vh;
-      border: 1px solid #e9ecef;
-    }
-    .center-column {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      min-height: 70vh;
-      border: 1px solid #e9ecef;
-    }
-    .lower-panel {
-      background: white;
-      border-radius: 2rem;
-      padding: 0.6rem 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-      border: 1px solid #e9ecef;
-      display: inline-block;
-      width: auto;
-      margin: 0 auto;
-    }
-    .navbar {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      margin-bottom: 1.5rem;
-    }
-    /* optional subtle hover effect on columns (just for aesthetics) */
-    .inbox-column, .center-column {
-      transition: box-shadow 0.2s;
-    }
-    .inbox-column:hover, .center-column:hover {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    }
+    .chat-sidebar { height: calc(100vh - 72px); overflow-y: auto; border-right: 1px solid #dee2e6; }
+    .chat-main    { height: calc(100vh - 72px); display: flex; flex-direction: column; }
+    .mensajes-area{ flex: 1; overflow-y: auto; padding: 1rem; background: #f8f9fa; }
+    .burbuja-yo   { background: #0d6efd; color: #fff; border-radius: 18px 18px 4px 18px; padding: 8px 14px; max-width: 70%; display: inline-block; }
+    .burbuja-otro { background: #fff; border: 1px solid #dee2e6; border-radius: 18px 18px 18px 4px; padding: 8px 14px; max-width: 70%; display: inline-block; }
+    .chat-item.activo { background: #e7f1ff; border-left: 3px solid #0d6efd; }
+    .chat-item { cursor: pointer; border-left: 3px solid transparent; transition: background .15s; }
+    .chat-item:hover { background: #f8f9fa; }
+    .badge-no-leidos { font-size: 10px; min-width: 18px; height: 18px; }
   </style>
 </head>
 <body>
 
-<!-- Top navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid px-4">
-    <a class="navbar-brand fw-semibold" href="#">📬 Inbox</a>
-  </div>
-</nav>
-
-<div class="container px-4">
-  <!-- Main row: left inbox column + center blank column -->
-  <div class="row g-4">
-    <!-- LEFT COLUMN – dedicated to inbox (visibly separate, empty) -->
-    <div class="col-md-5 col-lg-4">
-      <div class="inbox-column p-0">
-        <!-- absolutely empty – no text, no icons, no messages -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid px-3">
+      <a class="navbar-brand fw-bold" href="index.html">AUTODRIVE</a>
+      <div class="d-flex align-items-center gap-2">
+        <a href="catalogo.html" class="btn btn-outline-light btn-sm">Catálogo</a>
+        <a href="perfil.html" class="btn btn-outline-light btn-sm">Mi Cuenta</a>
+        <button class="btn btn-outline-danger btn-sm" id="btn-salir">Salir</button>
       </div>
     </div>
+  </nav>
 
-    <!-- CENTER COLUMN – completely blank -->
-    <div class="col-md-7 col-lg-8">
-      <div class="center-column p-0">
-        <!-- nothing here -->
-      </div>
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+
+      <!-- LISTA DE CHATS -->
+      <aside class="col-md-4 col-lg-3 chat-sidebar">
+        <div class="p-3 border-bottom">
+          <h6 class="fw-bold mb-0"><i class="bi bi-chat-dots me-2"></i>Mis Conversaciones</h6>
+        </div>
+        <div id="lista-chats">
+          <div class="text-center py-4">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ÁREA DE CHAT -->
+      <main class="col-md-8 col-lg-9 chat-main">
+
+        <!-- Header del chat activo -->
+        <div class="border-bottom p-3 d-flex align-items-center justify-content-between" id="chat-header">
+          <div>
+            <h6 class="fw-bold mb-0" id="chat-titulo">Selecciona una conversación</h6>
+            <small class="text-muted" id="chat-subtitulo"></small>
+          </div>
+          <div id="chat-acciones" class="d-none">
+            <a id="chat-link-publicacion" href="#" class="btn btn-outline-dark btn-sm me-2">
+              <i class="bi bi-car-front me-1"></i>Ver auto
+            </a>
+            <button class="btn btn-outline-secondary btn-sm" id="btn-archivar">
+              <i class="bi bi-archive me-1"></i>Archivar
+            </button>
+          </div>
+        </div>
+
+        <!-- Mensajes -->
+        <div class="mensajes-area" id="mensajes-area">
+          <div class="text-center text-muted py-5">
+            <i class="bi bi-chat-square display-3 opacity-25"></i>
+            <p class="mt-2">Selecciona una conversación para empezar</p>
+          </div>
+        </div>
+
+        <!-- Input de mensaje -->
+        <div class="border-top p-3 d-none" id="input-area">
+          <form id="formMensaje" class="d-flex gap-2">
+            <input type="text" class="form-control" id="input-mensaje"
+                   placeholder="Escribe un mensaje..." autocomplete="off" maxlength="500">
+            <button type="submit" class="btn btn-primary px-3">
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </form>
+        </div>
+
+      </main>
     </div>
   </div>
 
-  <!-- Small lower panel (centered) -->
-  <div class="row mt-4">
-    <div class="col-12 text-center">
-      <div class="lower-panel">
-        <button class="btn btn-sm btn-outline-secondary me-2">✏️ Compose</button>
-        <button class="btn btn-sm btn-outline-secondary">🗑 Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/mensajeria.js"></script>
 </body>
 </html>

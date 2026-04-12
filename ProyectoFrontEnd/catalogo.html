@@ -1,6 +1,148 @@
 <!DOCTYPE html>
-<html>
-  <body>
-      <p>CATALOG0</p>
-  </body>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoDrive | Catálogo</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">AUTODRIVE</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" href="catalogo.html">Catálogo</a></li>
+          <li class="nav-item d-none" id="link-publicar"><a class="nav-link" href="publicar.html">Vender Auto</a></li>
+          <li class="nav-item d-none" id="link-mensajeria"><a class="nav-link" href="mensajeria.html">Mensajería</a></li>
+          <li class="nav-item d-none" id="link-favoritos"><a class="nav-link" href="favoritos.html">Favoritos</a></li>
+        </ul>
+        <div id="contenedor-auth" class="d-flex gap-2"></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid my-4">
+    <div class="row g-4">
+
+      <!-- FILTROS -->
+      <aside class="col-lg-3">
+        <div class="card shadow-sm border-0 p-3">
+          <h6 class="fw-bold mb-3"><i class="bi bi-funnel me-2"></i>Filtros</h6>
+          <form id="formFiltros">
+
+            <label class="form-label small fw-bold">Marca</label>
+            <select class="form-select form-select-sm mb-3" id="filtro-marca">
+              <option value="">Todas las marcas</option>
+            </select>
+
+            <label class="form-label small fw-bold">Modelo</label>
+            <select class="form-select form-select-sm mb-3" id="filtro-modelo" disabled>
+              <option value="">Todos los modelos</option>
+            </select>
+
+            <label class="form-label small fw-bold">Precio</label>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <input type="number" class="form-control form-control-sm" id="filtro-precio-min" placeholder="Mín $">
+              </div>
+              <div class="col-6">
+                <input type="number" class="form-control form-control-sm" id="filtro-precio-max" placeholder="Máx $">
+              </div>
+            </div>
+
+            <label class="form-label small fw-bold">Año</label>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <input type="number" class="form-control form-control-sm" id="filtro-anio-min" placeholder="Desde">
+              </div>
+              <div class="col-6">
+                <input type="number" class="form-control form-control-sm" id="filtro-anio-max" placeholder="Hasta">
+              </div>
+            </div>
+
+            <label class="form-label small fw-bold">Combustible</label>
+            <select class="form-select form-select-sm mb-3" id="filtro-combustible">
+              <option value="">Cualquiera</option>
+            </select>
+
+            <label class="form-label small fw-bold">Transmisión</label>
+            <select class="form-select form-select-sm mb-3" id="filtro-transmision">
+              <option value="">Cualquiera</option>
+            </select>
+
+            <label class="form-label small fw-bold">Condición</label>
+            <select class="form-select form-select-sm mb-3" id="filtro-condicion">
+              <option value="">Cualquiera</option>
+            </select>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="bi bi-search me-1"></i>Buscar
+              </button>
+              <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-limpiar">
+                Limpiar filtros
+              </button>
+            </div>
+          </form>
+        </div>
+      </aside>
+
+      <!-- RESULTADOS -->
+      <main class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold mb-0">Resultados <span id="total-resultados" class="text-muted fw-normal"></span></h5>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" id="contenedor-vehiculos">
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+        </div>
+
+        <!-- PAGINACIÓN -->
+        <nav class="mt-4 d-flex justify-content-center" id="paginacion"></nav>
+      </main>
+    </div>
+  </div>
+
+  <!-- LOGIN / REGISTRO modals (igual que index) -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white border-0">
+          <h5 class="modal-title fw-bold">Iniciar Sesión</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div id="alerta-login"></div>
+          <form id="formLogin">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Correo</label>
+              <input type="email" name="correoLogin" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Contraseña</label>
+              <input type="password" name="passLogin" class="form-control" required>
+            </div>
+            <div class="d-grid"><button type="submit" class="btn btn-primary">Entrar</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/catalogo.js"></script>
+</body>
 </html>

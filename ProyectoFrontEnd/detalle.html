@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoDrive | Detalle</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">AUTODRIVE</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+          <li class="nav-item d-none" id="link-publicar"><a class="nav-link" href="publicar.html">Vender Auto</a></li>
+          <li class="nav-item d-none" id="link-mensajeria"><a class="nav-link" href="mensajeria.html">Mensajería</a></li>
+          <li class="nav-item d-none" id="link-favoritos"><a class="nav-link" href="favoritos.html">Favoritos</a></li>
+        </ul>
+        <div id="contenedor-auth" class="d-flex gap-2"></div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-4" id="contenido-detalle">
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  </main>
+
+  <!-- MODAL COMPRAR -->
+  <div class="modal fade" id="modalComprar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title fw-bold"><i class="bi bi-cart-check me-2"></i>Confirmar Compra</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div id="alerta-compra"></div>
+          <p>Vas a adquirir: <strong id="compra-titulo"></strong></p>
+          <p>Precio: <strong class="text-success" id="compra-precio"></strong></p>
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Observaciones (opcional)</label>
+            <textarea class="form-control" id="compra-obs" rows="2" placeholder="Forma de pago, lugar de entrega..."></textarea>
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" id="btn-confirmar-compra">
+              <i class="bi bi-check-circle me-2"></i>Confirmar Compra
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL REPORTAR -->
+  <div class="modal fade" id="modalReportar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold"><i class="bi bi-flag me-2"></i>Reportar Publicación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div id="alerta-reporte"></div>
+          <form id="formReporte">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Motivo *</label>
+              <select class="form-select" name="motivo" required>
+                <option value="">Selecciona un motivo</option>
+                <option>Información falsa o engañosa</option>
+                <option>Precio irreal</option>
+                <option>Vehículo ya vendido</option>
+                <option>Contenido inapropiado</option>
+                <option>Posible fraude</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Descripción</label>
+              <textarea class="form-control" name="descripcion" rows="3" placeholder="Describe el problema..."></textarea>
+            </div>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-danger">Enviar Reporte</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white border-0">
+          <h5 class="modal-title fw-bold">Iniciar Sesión</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div id="alerta-login"></div>
+          <form id="formLogin">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Correo</label>
+              <input type="email" name="correoLogin" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Contraseña</label>
+              <input type="password" name="passLogin" class="form-control" required>
+            </div>
+            <div class="d-grid"><button type="submit" class="btn btn-primary">Entrar</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/detalle.js"></script>
+</body>
+</html>

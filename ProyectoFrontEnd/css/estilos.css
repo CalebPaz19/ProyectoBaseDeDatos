@@ -1,42 +1,69 @@
 .hero-section {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1500&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 100px 0;
-        }
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1500&q=80');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 100px 0;
+}
+
 .card-img-top {
-    height: 200px;
-    object-fit: cover;
+  height: 200px;
+  object-fit: cover;
 }
 
-/* Sidebar styling */
 .sidebar {
-    background-color: #212529 !important;
+  background-color: #212529 !important;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+/* Hover en tarjetas */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
 }
 
-/* Navbar link hover */
+/* Navbar links */
 .navbar-nav .nav-link {
-    transition: color 0.2s ease;
+  transition: color 0.2s ease;
 }
-
 .navbar-nav .nav-link:hover {
-    color: #f39c12 !important;
+  color: #f39c12 !important;
 }
 
-/* Button hover effects */
+/* Botones */
 .btn-primary:hover {
-    background-color: #e74c3c;
-    border-color: #e74c3c;
+  background-color: #0b5ed7;
 }
 
-/* Form focus effects */
-.form-control:focus {
-    border-color: #e74c3c;
-    box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+/* Focus en inputs */
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+}
+
+/* Sidebar links */
+.sidebar .nav-link {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.3rem;
+  margin: 2px 8px;
+  transition: background 0.15s;
+}
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Spinner overlay (opcional) */
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }

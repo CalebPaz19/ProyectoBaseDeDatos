@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoDrive | Publicar Vehículo</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">AUTODRIVE</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="catalogo.html">Catálogo</a></li>
+          <li class="nav-item"><a class="nav-link active" href="publicar.html">Vender Auto</a></li>
+          <li class="nav-item d-none" id="link-mensajeria"><a class="nav-link" href="mensajeria.html">Mensajería</a></li>
+          <li class="nav-item d-none" id="link-favoritos"><a class="nav-link" href="favoritos.html">Favoritos</a></li>
+        </ul>
+        <div id="contenedor-auth" class="d-flex gap-2"></div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-4" style="max-width:860px">
+    <h3 class="fw-bold mb-1"><i class="bi bi-plus-circle me-2"></i>Publicar mi Vehículo</h3>
+    <p class="text-muted mb-4">Completa todos los campos para crear tu publicación.</p>
+
+    <div id="alerta-publicar"></div>
+
+    <form id="formPublicar" enctype="multipart/form-data">
+
+      <!-- PASO 1: Vehículo -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+          <i class="bi bi-car-front me-2"></i>Datos del Vehículo
+        </div>
+        <div class="card-body row g-3">
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Marca *</label>
+            <select class="form-select" id="sel-marca" required>
+              <option value="">Selecciona una marca</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Modelo *</label>
+            <select class="form-select" id="sel-modelo" name="id_modelo" required disabled>
+              <option value="">Primero selecciona una marca</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Año *</label>
+            <input type="number" class="form-control" name="año" min="1900" max="2026" placeholder="2020" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Kilometraje</label>
+            <input type="number" class="form-control" name="kilometraje" placeholder="50000">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Color</label>
+            <input type="text" class="form-control" name="color" placeholder="Negro">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Combustible *</label>
+            <select class="form-select" name="id_combustible" required>
+              <option value="">Seleccionar</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Transmisión *</label>
+            <select class="form-select" name="id_transmision" required>
+              <option value="">Seleccionar</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Carrocería *</label>
+            <select class="form-select" name="id_carroceria" required>
+              <option value="">Seleccionar</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Condición *</label>
+            <select class="form-select" name="id_condicion_vehiculo" required>
+              <option value="">Seleccionar</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Puertas</label>
+            <input type="number" class="form-control" name="num_puertas" min="2" max="6" placeholder="4">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Cilindraje</label>
+            <input type="number" class="form-control" name="cilindraje" placeholder="2000" step="0.1">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">VIN *</label>
+            <input type="text" class="form-control" name="vin" placeholder="1HGBH41JXMN109186" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Placa</label>
+            <input type="text" class="form-control" name="placa" placeholder="ABC-1234">
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-bold">Descripción del vehículo</label>
+            <textarea class="form-control" name="descripcion_general" rows="2" placeholder="Estado del motor, extras, historial..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 2: Ubicación -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+          <i class="bi bi-geo-alt me-2"></i>Ubicación del Vehículo
+        </div>
+        <div class="card-body row g-3">
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Continente *</label>
+            <select class="form-select" id="sel-continente" required>
+              <option value="">Seleccionar</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">País *</label>
+            <select class="form-select" id="sel-pais" required disabled>
+              <option value="">Primero selecciona continente</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Ciudad *</label>
+            <select class="form-select" id="sel-ciudad" name="id_ciudad" required disabled>
+              <option value="">Primero selecciona país</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-bold">Dirección (opcional)</label>
+            <input type="text" class="form-control" name="direccion" placeholder="Colonia Centro, Blvd. Los Próceres...">
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 3: Publicación -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+          <i class="bi bi-megaphone me-2"></i>Información del Anuncio
+        </div>
+        <div class="card-body row g-3">
+          <div class="col-md-8">
+            <label class="form-label small fw-bold">Título del anuncio *</label>
+            <input type="text" class="form-control" name="titulo" placeholder="Toyota Corolla 2020 - Excelente estado" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small fw-bold">Precio (USD) *</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control" name="precio" placeholder="12000" min="1" required>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-bold">Descripción del anuncio</label>
+            <textarea class="form-control" name="descripcion" rows="3" placeholder="Destaca las características más importantes..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 4: Imágenes -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold">
+          <i class="bi bi-images me-2"></i>Fotos del Vehículo
+        </div>
+        <div class="card-body">
+          <input type="file" class="form-control" name="imagenes" id="input-imagenes"
+                 accept="image/jpeg,image/png,image/webp" multiple>
+          <small class="text-muted">Máximo 10 imágenes · JPG, PNG o WEBP</small>
+          <div id="preview-imagenes" class="d-flex flex-wrap gap-2 mt-3"></div>
+        </div>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg" id="btn-publicar">
+          <i class="bi bi-check-circle me-2"></i>Publicar Vehículo
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/publicar.js"></script>
+</body>
+</html>
