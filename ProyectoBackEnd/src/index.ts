@@ -10,6 +10,9 @@ import ubicacionRouter from "./routers/ubicacion.router";
 import imagenRouter from "./routers/imagen.router";
 import adminRouter from "./routers/admin.router";
 import ventaRouter from "./routers/venta.router";
+import reporteRouter from "./routers/reporte.router";
+import favoritoRouter from "./routers/favorito.router";
+import chatRouter from "./routers/chat.router";
 
 const app: Express = express();
 
@@ -43,6 +46,9 @@ app.use('/autoDrive', ubicacionRouter);
 app.use('/autoDrive', imagenRouter);
 app.use("/autoDrive", adminRouter);
 app.use("/autoDrive", ventaRouter);
+app.use("/autoDrive", favoritoRouter);
+app.use("/autoDrive", reporteRouter);
+app.use("/autoDrive", chatRouter);
 
-// app.use('/autoDrive', imagenRouter);
+
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
