@@ -1,6 +1,7 @@
 import express,{ Express } from "express";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { poolPromise } from "./config/baseDeDatos";
 import usuariosRouter from './routers/usuarios.router';
 import publicacionRouter from './routers/publicacion.router'
@@ -37,6 +38,19 @@ async function startApp() {
 
 startApp();
 
+const uploadsDir = path.join(process.cwd(), "uploads");
+app.use("/uploads", express.static(uploadsDir));
+console.log("📁 Uploads en:", uploadsDir);
+
+app.get("/uploads-check", (_req, res) => {
+  try {
+    const archivos = fs.readdirSync(uploadsDir);
+    res.json({ carpeta: uploadsDir, archivos, total: archivos.length });
+  } catch {
+    res.json({ carpeta: uploadsDir, error: "La carpeta no existe o está vacía" });
+  }
+});
+
 // rutas
 app.use('/autoDrive', usuariosRouter);
 app.use('/autoDrive', publicacionRouter);
@@ -51,4 +65,3 @@ app.use("/autoDrive", reporteRouter);
 app.use("/autoDrive", chatRouter);
 
 
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
