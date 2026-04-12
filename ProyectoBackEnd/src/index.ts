@@ -1,13 +1,15 @@
 import express,{ Express } from "express";
 import cors from "cors";
+import path from "path";
 import { poolPromise } from "./config/baseDeDatos";
 import usuariosRouter from './routers/usuarios.router';
 import publicacionRouter from './routers/publicacion.router'
 import vehiculoRouter from "./routers/vehiculo.router";
 import catalogosRouter from "./routers/catalogos.router";
 import ubicacionRouter from "./routers/ubicacion.router";
-import path from "path";
 import imagenRouter from "./routers/imagen.router";
+import adminRouter from "./routers/admin.router";
+import ventaRouter from "./routers/venta.router";
 
 const app: Express = express();
 
@@ -31,6 +33,7 @@ async function startApp() {
 }
 
 startApp();
+
 // rutas
 app.use('/autoDrive', usuariosRouter);
 app.use('/autoDrive', publicacionRouter);
@@ -38,5 +41,8 @@ app.use('/autoDrive', vehiculoRouter);
 app.use('/autoDrive', catalogosRouter);
 app.use('/autoDrive', ubicacionRouter);
 app.use('/autoDrive', imagenRouter);
+app.use("/autoDrive", adminRouter);
+app.use("/autoDrive", ventaRouter);
+
 // app.use('/autoDrive', imagenRouter);
 app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));

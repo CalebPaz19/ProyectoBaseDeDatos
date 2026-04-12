@@ -1,10 +1,12 @@
-import { poolPromise } from "../config/baseDeDatos";
+import { Transaction } from "mssql";
+import { getRequest, poolPromise } from "../config/baseDeDatos";
 import { Publicacion } from "../Interfaces/publicacion.interface";
 
-export const guardarPublicacion = async (publicacion: Publicacion) => {
-  const conexion = await poolPromise;
+export const guardarPublicacion = async (publicacion: Publicacion, tx?: Transaction) => {
 
-  const result = await conexion.request()
+  const request = await getRequest(tx);
+
+  const result = await  request
     .input('titulo', publicacion.titulo)
     .input('descripcion', publicacion.descripcion || null)
     .input('precio', publicacion.precio)
@@ -37,7 +39,7 @@ export const guardarPublicacion = async (publicacion: Publicacion) => {
   return result.recordset[0];
 };
 
-// ── Listar todas las publicaciones activas
+//Listar todas las publicaciones activas
 export const buscarPublicaciones = async (filtros: {
   id_marca?: number | undefined;
   id_modelo?: number | undefined;
@@ -105,7 +107,7 @@ export const buscarPublicaciones = async (filtros: {
   }
  
   const result = await req.query(`
-    SELECT
+     SELECT
       p.id_publicacion,
       p.titulo,
       p.precio,
@@ -113,20 +115,19 @@ export const buscarPublicaciones = async (filtros: {
       p.fecha_publicacion,
       v.año,
       v.kilometraje,
-      v.color,
-      ma.nombre  AS marca,
-      mo.nombre  AS modelo,
-      ci.nombre  AS ciudad,
+      ma.nombre AS marca,
+      mo.nombre AS modelo,
+      ci.nombre AS ciudad,
       (SELECT TOP 1 i.url_imagen
        FROM Imagen i
        WHERE i.id_publicacion = p.id_publicacion
        ORDER BY i.orden_imagen) AS imagen_principal
     FROM Publicacion p
-    JOIN Vehiculo v   ON v.id_vehiculo   = p.id_vehiculo
-    JOIN Modelo   mo  ON mo.id_modelo    = v.id_modelo
-    JOIN Marca    ma  ON ma.id_marca     = mo.id_marca
-    JOIN Ubicacion u  ON u.id_ubicacion  = p.id_ubicacion
-    JOIN Ciudad   ci  ON ci.id_ciudad    = u.id_ciudad
+    JOIN Vehiculo  v  ON v.id_vehiculo  = p.id_vehiculo
+    JOIN Modelo    mo ON mo.id_modelo   = v.id_modelo
+    JOIN Marca     ma ON ma.id_marca    = mo.id_marca
+    JOIN Ubicacion u  ON u.id_ubicacion = p.id_ubicacion
+    JOIN Ciudad    ci ON ci.id_ciudad   = u.id_ciudad
     ${where}
     ORDER BY p.fecha_publicacion DESC
     OFFSET @offset ROWS FETCH NEXT @por_pagina ROWS ONLY
@@ -162,7 +163,136 @@ export const obtenerPublicacionesPorUsuario = async (id_usuario: number) => {
       JOIN Modelo   mo ON mo.id_modelo  = v.id_modelo
       JOIN Marca    ma ON ma.id_marca   = mo.id_marca
       WHERE p.id_usuario = @id_usuario
+      AND p.estado <> 'eliminada'
       ORDER BY p.fecha_publicacion DESC
     `);
+  return result.recordset;
+};
+
+//Detalle completo de una publicación
+export const obtenerDetalle = async (id_publicacion: number) => {
+
+  const conexion = await poolPromise;
+
+  const result = await conexion.request()
+    .input("id_publicacion", id_publicacion)
+    .query(`
+      SELECT
+        p.id_publicacion,
+        p.titulo,
+        p.descripcion,
+        p.precio,
+        p.estado,
+        p.fecha_publicacion,
+        v.año, v.kilometraje, v.color, v.num_puertas,
+        v.cilindraje, v.vin, v.placa, v.descripcion_general,
+        ma.nombre AS marca,
+        mo.nombre AS modelo,
+        cb.nombre AS combustible,
+        tr.nombre AS transmision,
+        tc.nombre AS carroceria,
+        cv.nombre AS condicion,
+        ci.nombre AS ciudad,
+        pa.nombre AS pais,
+        u.direccion,
+        us.primer_nombre   AS vendedor_nombre,
+        us.primer_apellido AS vendedor_apellido,
+        us.telefono        AS vendedor_telefono,
+        (SELECT i.id_imagen, i.url_imagen, i.orden_imagen
+         FROM Imagen i
+         WHERE i.id_publicacion = p.id_publicacion
+         FOR JSON PATH) AS imagenes
+      FROM Publicacion         p
+      JOIN Vehiculo            v  ON v.id_vehiculo           = p.id_vehiculo
+      JOIN Modelo              mo ON mo.id_modelo             = v.id_modelo
+      JOIN Marca               ma ON ma.id_marca              = mo.id_marca
+      JOIN Combustible         cb ON cb.id_combustible        = v.id_combustible
+      JOIN Transmision         tr ON tr.id_transmision        = v.id_transmision
+      JOIN TipoCarroceria      tc ON tc.id_carroceria         = v.id_carroceria
+      JOIN CondicionVehiculo   cv ON cv.id_condicion_vehiculo = v.id_condicion_vehiculo
+      JOIN Ubicacion           u  ON u.id_ubicacion           = p.id_ubicacion
+      JOIN Ciudad              ci ON ci.id_ciudad             = u.id_ciudad
+      JOIN Pais                pa ON pa.id_pais               = ci.id_pais
+      JOIN Usuario             us ON us.id_usuario            = p.id_usuario
+      WHERE p.id_publicacion = @id_publicacion
+    `);
+ 
+  const row = result.recordset[0];
+  if (!row) return null;
+ 
+  return {
+    ...row,
+    imagenes: row.imagenes ? JSON.parse(row.imagenes) : [],
+  };
+};
+
+export const actualizarEstadoPublicacion = async (id_publicacion: number, estado: string) => {
+  
+  const conexion = await poolPromise;
+ 
+  await conexion
+    .request()
+    .input("id_publicacion", id_publicacion)
+    .input("estado",         estado)
+    .query(`
+      UPDATE Publicacion
+      SET estado = @estado
+      WHERE id_publicacion = @id_publicacion
+    `);
+};
+
+//Listar TODAS las publicaciones (solo admin)
+export const listarTodasLasPublicaciones = async (filtros: {
+  estado?: string;
+  pagina?: number;
+  por_pagina?: number;
+}) => {
+  const conexion = await poolPromise;
+  const pagina = filtros.pagina    ?? 1;
+  const por_pagina = filtros.por_pagina ?? 20;
+  const offset = (pagina - 1) * por_pagina;
+ 
+  const req = conexion
+    .request()
+    .input("offset",     offset)
+    .input("por_pagina", por_pagina);
+ 
+  let where = "WHERE 1 = 1";
+ 
+  if (filtros.estado) {
+    req.input("estado", filtros.estado);
+    where += " AND p.estado = @estado";
+  }
+ 
+  const result = await req.query(`
+    SELECT
+      p.id_publicacion,
+      p.titulo,
+      p.precio,
+      p.estado,
+      p.fecha_publicacion,
+      v.año,
+      v.kilometraje,
+      ma.nombre  AS marca,
+      mo.nombre  AS modelo,
+      ci.nombre  AS ciudad,
+      us.primer_nombre   AS vendedor_nombre,
+      us.primer_apellido AS vendedor_apellido,
+      (SELECT TOP 1 i.url_imagen
+       FROM Imagen i
+       WHERE i.id_publicacion = p.id_publicacion
+       ORDER BY i.orden_imagen) AS imagen_principal
+    FROM Publicacion p
+    JOIN Vehiculo  v  ON v.id_vehiculo  = p.id_vehiculo
+    JOIN Modelo    mo ON mo.id_modelo   = v.id_modelo
+    JOIN Marca     ma ON ma.id_marca    = mo.id_marca
+    JOIN Ubicacion u  ON u.id_ubicacion = p.id_ubicacion
+    JOIN Ciudad    ci ON ci.id_ciudad   = u.id_ciudad
+    JOIN Usuario   us ON us.id_usuario  = p.id_usuario
+    ${where}
+    ORDER BY p.fecha_publicacion DESC
+    OFFSET @offset ROWS FETCH NEXT @por_pagina ROWS ONLY
+  `);
+ 
   return result.recordset;
 };

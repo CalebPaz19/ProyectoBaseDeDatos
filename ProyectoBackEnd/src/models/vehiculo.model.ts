@@ -1,10 +1,12 @@
-import { poolPromise } from "../config/baseDeDatos";
+import { Transaction } from "mssql";
+import { getRequest } from "../config/baseDeDatos";
 import { Vehiculo } from "../Interfaces/vehiculo.interface";
 
-export const guardarVehiculo = async (data: Vehiculo) => {
-  const conexion = await poolPromise;
+export const guardarVehiculo = async (data: Vehiculo, tx?: Transaction) => {
 
-  const result = await conexion.request()
+  const request = await getRequest(tx);
+
+  const result = await request
     .input('id_modelo', data.id_modelo)
     .input('id_combustible', data.id_combustible)
     .input('id_transmision', data.id_transmision)

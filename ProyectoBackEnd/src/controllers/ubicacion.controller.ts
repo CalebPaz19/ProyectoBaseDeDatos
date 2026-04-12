@@ -11,12 +11,13 @@ export const crearUbicacion = async (req: Request, res: Response) => {
       });
     }
 
-    const nueva = await guardarUbicacion(id_ciudad, direccion);
+    const nueva = await guardarUbicacion({ id_ciudad, direccion });
 
-    return res.status(201).json({
-      id_ubicacion: nueva.id_ubicacion
+     return res.status(201).json({
+      message: "Ubicación creada",
+      id_ubicacion: nueva.id_ubicacion,
     });
-
+  
   } catch (error: any) {
 
     if (error.number === 547) {

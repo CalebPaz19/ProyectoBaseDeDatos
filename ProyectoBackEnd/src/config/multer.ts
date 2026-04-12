@@ -11,4 +11,15 @@ const storage = multer.diskStorage({
   }
 });
 
-export const upload = multer({ storage });
+const filtro: multer.Options["fileFilter"] = (_req, file, cb) => {
+  const tipos = ["image/jpeg", "image/png", "image/webp"];
+  if (tipos.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Solo se permiten imágenes JPG, PNG o WEBP"));
+  }
+};
+export const upload = multer(
+  { storage,
+   fileFilter: filtro, 
+  });

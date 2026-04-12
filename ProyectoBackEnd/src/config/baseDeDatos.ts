@@ -1,4 +1,4 @@
-import sql from "mssql"
+import sql, { Request, Transaction } from "mssql"
 
 const config: sql.config = {
   user: 'sa',
@@ -23,3 +23,11 @@ export const poolPromise = new sql.ConnectionPool(config)
     console.error('Error de conexión:', err);
     process.exit(1);
   });
+
+  
+export const getRequest = async (tx?: Transaction): Promise<Request> => {
+if (tx) return tx.request();
+
+const pool = await poolPromise;
+return pool.request();
+};

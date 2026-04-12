@@ -1,11 +1,14 @@
-import { poolPromise } from "../config/baseDeDatos";
+import { Transaction } from "mssql";
+import { getRequest } from "../config/baseDeDatos";
+import { Ubicacion } from "../Interfaces/ubiacio.interface";
 
-export const guardarUbicacion = async (id_ciudad: number, direccion?: string) => {
-  const conexion = await poolPromise;
+export const guardarUbicacion = async (ubicacion:Ubicacion, tx?: Transaction) => {
 
-  const result = await conexion.request()
-    .input('id_ciudad', id_ciudad)
-    .input('direccion', direccion || null)
+  const request = await getRequest(tx);
+
+  const result = await request
+    .input('id_ciudad', ubicacion.id_ciudad)
+    .input('direccion', ubicacion.direccion || null)
     .query(`
       INSERT INTO Ubicacion (id_ciudad, direccion)
       OUTPUT INSERTED.id_ubicacion
