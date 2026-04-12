@@ -7,7 +7,7 @@
   "build": "tsc",
   "compilar": "tsc --watch",
   "start": "node dist/index.js"
-}
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
