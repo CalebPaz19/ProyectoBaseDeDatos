@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-     "build": "tsc",
     "compilar": "tsc --watch",
-    "start": "node dist/index.js"
+    "start": "nodemon dist/index.js --watch"
   },
   "keywords": [],
   "author": "",
