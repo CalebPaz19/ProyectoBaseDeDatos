@@ -23,6 +23,11 @@ function actualizarNavbar() {
     document.getElementById('link-publicar')?.classList.remove('d-none');
     document.getElementById('link-mensajeria')?.classList.remove('d-none');
     document.getElementById('link-favoritos')?.classList.remove('d-none');
+
+    // Enlace al panel admin — solo visible para administradores
+    if (usuario.rol === 'admin') {
+      document.getElementById('link-admin')?.classList.remove('d-none');
+    }
   } else {
     contenedor.innerHTML = `
       <button type="button" class="btn btn-outline-light btn-sm px-3"

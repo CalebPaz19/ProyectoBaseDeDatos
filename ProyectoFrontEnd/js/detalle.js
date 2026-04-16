@@ -147,7 +147,7 @@ function renderizarDetalle(p) {
           ${ficha('Transmisión', p.transmision)}
           ${ficha('Carrocería',  p.carroceria)}
           ${ficha('Condición',   p.condicion)}
-          ${ficha('Cilindraje',  p.cilindraje ? p.cilindraje.toFixed(1)+' cc' : null)}
+          ${ficha('Cilindraje',  p.cilindraje ? p.cilindraje.toFixed(1)+' litros' : null)}
           ${ficha('VIN',         p.vin)}
           ${ficha('Placa',       p.placa)}
         </div>

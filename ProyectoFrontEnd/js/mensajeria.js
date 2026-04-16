@@ -153,6 +153,12 @@ document.getElementById('btn-archivar')?.addEventListener('click', async () => {
 });
 
 // ── Cerrar sesión ─────────────────────────────────────────────────────────────
+// Mostrar enlace admin si corresponde
+const _u = sesion.obtener();
+if (_u?.rol === 'admin') {
+  document.getElementById('link-admin')?.classList.remove('d-none');
+}
+
 document.getElementById('btn-salir')?.addEventListener('click', () => {
   sesion.cerrar();
   window.location.href = 'index.html';
